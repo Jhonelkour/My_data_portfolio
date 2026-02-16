@@ -1,0 +1,43 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap");
+
+:root {
+  --primary: #137fec;
+  --background-light: #f6f7f8;
+  --background-dark: #101922;
+  --font-display:
+    "Space Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial;
+  --radius-default: 0.25rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* keep variables the same; UI can toggle with .dark on html */
+  }
+}
+
+html.dark body {
+  background: var(--background-dark);
+  color: #e6eef8;
+}
+
+body {
+  background: var(--background-light);
+  color: #0f172a;
+  font-family: var(--font-display);
+}
+
+/* helpers matching original palette */
+.bg-primary {
+  background-color: var(--primary);
+}
+.text-primary {
+  color: var(--primary);
+}
+.border-primary {
+  border-color: var(--primary);
+}
