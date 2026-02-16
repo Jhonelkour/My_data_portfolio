@@ -41,3 +41,12 @@ body {
 .border-primary {
   border-color: var(--primary);
 }
+
+/* make images and media scale on small screens */
+img,
+picture,
+video,
+iframe {
+  max-width: 100%;
+  height: auto;
+}
