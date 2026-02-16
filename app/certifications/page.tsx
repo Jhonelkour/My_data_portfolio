@@ -217,22 +217,23 @@ export default function Certifications() {
         </article>
       </div>
 
-      <section className="mt-20 p-8 rounded-2xl bg-primary/5 border border-primary/20 flex flex-col md:flex-row items-center justify-between gap-6">
-        <div className="flex items-center gap-6">
-          <div className="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center text-primary">
-            <span className="material-icons-round text-3xl">verified</span>
+      <section className="mt-20 p-6 md:p-8 rounded-2xl bg-primary/5 border border-primary/20 flex flex-col md:flex-row items-center gap-6">
+        <div className="flex flex-col md:flex-row items-center md:items-start gap-4 md:gap-8 w-full">
+          <div className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-primary/20 flex items-center justify-center text-primary flex-shrink-0">
+            <span className="material-icons-round text-2xl md:text-3xl">
+              verified
+            </span>
           </div>
-          <div>
-            <h4 className="text-xl font-bold">Credential Verification</h4>
-            <p className="text-slate-500 dark:text-slate-400">
+          <div className="max-w-2xl md:max-w-3xl text-center md:text-left">
+            <h4 className="text-xl md:text-2xl font-bold">
+              Credential Verification
+            </h4>
+            <p className="text-slate-500 dark:text-slate-400 text-sm md:text-base">
               All certificates are verified via third-party providers including
               Credly and Coursera.
             </p>
           </div>
         </div>
-        <button className="px-6 py-3 border-2 border-primary text-primary font-bold rounded-lg hover:bg-primary hover:text-white transition-all">
-          Download Full Transcript
-        </button>
       </section>
     </main>
   );
