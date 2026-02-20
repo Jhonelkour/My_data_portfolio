@@ -57,6 +57,15 @@ export default function Projects() {
   const [query, setQuery] = useState("");
   const [techFilters, setTechFilters] = useState<string[]>([]);
 
+  const TECH_LINKS: Record<string, string[]> = {
+    Python: ["avito", "credit", "netflix"],
+    PyTorch: [],
+    "Scikit-learn": ["avito", "credit"],
+    Pandas: ["avito", "credit", "netflix"],
+    SQL: [],
+    Tableau: [],
+  };
+
   const categories = useMemo(() => {
     const set = new Set<string>();
     ALL_PROJECTS.forEach((p) => p.categories.forEach((c) => set.add(c)));
@@ -65,23 +74,22 @@ export default function Projects() {
 
   const filtered = useMemo(() => {
     let list = ALL_PROJECTS.slice();
-    if (appliedChecked.length)
+    // If tech filters are active, use them as the primary filter (override categories)
+    if (techFilters.length) {
+      const allowed = new Set<string>(
+        techFilters.flatMap((t) => TECH_LINKS[t] || []),
+      );
+      list = list.filter((p) => allowed.has(p.id));
+    } else if (appliedChecked.length) {
       list = list.filter((p) =>
         p.categories.some((c) => appliedChecked.includes(c)),
       );
+    }
     if (query.trim())
       list = list.filter((p) =>
         p.title.toLowerCase().includes(query.toLowerCase()),
       );
-    if (techFilters.length) {
-      list = list.filter((p) =>
-        techFilters.some((t) =>
-          (p.description + " " + p.title)
-            .toLowerCase()
-            .includes(t.toLowerCase()),
-        ),
-      );
-    }
+    // query filter applies on the current list
     return list;
   }, [appliedChecked, query, techFilters]);
 
@@ -167,15 +175,22 @@ export default function Projects() {
                 "Pandas",
                 "SQL",
                 "Tableau",
-              ].map((t) => (
-                <button
-                  key={t}
-                  onClick={() => toggleTech(t)}
-                  className="px-3 py-1 text-xs border border-primary/30 rounded-full hover:bg-primary hover:text-white transition-all"
-                >
-                  {t}
-                </button>
-              ))}
+              ].map((t) => {
+                const active = techFilters.includes(t);
+                return (
+                  <button
+                    key={t}
+                    onClick={() => toggleTech(t)}
+                    className={`px-3 py-1 text-xs border rounded-full transition-all ${
+                      active
+                        ? "bg-primary text-white border-primary"
+                        : "border-primary/30 hover:bg-primary hover:text-white"
+                    }`}
+                  >
+                    {t}
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>
