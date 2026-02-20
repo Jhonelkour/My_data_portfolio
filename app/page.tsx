@@ -84,7 +84,7 @@ export default function Home() {
     },
     {
       name: "TensorFlow",
-      img: "/images/TensorFlow.svg",
+      img: "/images/Tensorflow.svg",
       desc: "Deep Learning",
     },
     {
