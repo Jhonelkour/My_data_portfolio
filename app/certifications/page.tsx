@@ -1,4 +1,37 @@
+"use client";
+
+import { useEffect } from "react";
+
 export default function Certifications() {
+  useEffect(() => {
+    const prefersReduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    const items = Array.from(
+      document.querySelectorAll(".project-reveal"),
+    ) as HTMLElement[];
+    if (prefersReduced) {
+      items.forEach((el) => {
+        el.classList.remove("opacity-0", "translate-y-6");
+        el.classList.add("opacity-100", "translate-y-0");
+      });
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries, obs) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const node = entry.target as HTMLElement;
+          node.classList.remove("opacity-0", "translate-y-6");
+          node.classList.add("opacity-100", "translate-y-0");
+          obs.unobserve(node);
+        });
+      },
+      { threshold: 0.1 },
+    );
+    items.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, []);
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <header className="mb-12">
@@ -13,26 +46,13 @@ export default function Certifications() {
               and Cloud Architecture.
             </p>
           </div>
-          <div className="flex flex-wrap gap-2">
-            <button className="px-4 py-2 rounded-full bg-primary/10 text-primary text-xs font-bold border border-primary/20 hover:bg-primary hover:text-white transition-all">
-              ALL
-            </button>
-            <button className="px-4 py-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 text-xs font-bold border border-transparent hover:border-primary/50 transition-all">
-              MACHINE LEARNING
-            </button>
-            <button className="px-4 py-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 text-xs font-bold border border-transparent hover:border-primary/50 transition-all">
-              CLOUD
-            </button>
-            <button className="px-4 py-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 text-xs font-bold border border-transparent hover:border-primary/50 transition-all">
-              DATA ANALYSIS
-            </button>
-          </div>
+          {/* filters removed per request */}
         </div>
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {/* Card 1 */}
-        <article className="group bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 rounded-xl overflow-hidden hover:border-primary transition-all duration-300 flex flex-col">
+        <article className="project-reveal group transform transition-all duration-700 ease-out opacity-0 translate-y-6 bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 rounded-xl overflow-hidden hover:border-primary transition-all duration-300 flex flex-col">
           <div className="h-48 bg-slate-100 dark:bg-slate-900 flex flex-col items-center justify-center p-8 relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent" />
             <img
@@ -69,7 +89,7 @@ export default function Certifications() {
         </article>
 
         {/* Card 2 */}
-        <article className="group bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 rounded-xl overflow-hidden hover:border-primary transition-all duration-300 flex flex-col">
+        <article className="project-reveal group transform transition-all duration-700 ease-out opacity-0 translate-y-6 bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 rounded-xl overflow-hidden hover:border-primary transition-all duration-300 flex flex-col">
           <div className="h-48 bg-slate-100 dark:bg-slate-900 flex items-center justify-center p-8 relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent" />
             <img
@@ -105,7 +125,7 @@ export default function Certifications() {
         </article>
 
         {/* Card 3 */}
-        <article className="group bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 rounded-xl overflow-hidden hover:border-primary transition-all duration-300 flex flex-col">
+        <article className="project-reveal group transform transition-all duration-700 ease-out opacity-0 translate-y-6 bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 rounded-xl overflow-hidden hover:border-primary transition-all duration-300 flex flex-col">
           <div className="h-48 bg-slate-100 dark:bg-slate-900 flex items-center justify-center p-8 relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent" />
             <img
@@ -141,7 +161,7 @@ export default function Certifications() {
         </article>
 
         {/* Card 4 */}
-        <article className="group bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 rounded-xl overflow-hidden hover:border-primary transition-all duration-300 flex flex-col">
+        <article className="project-reveal group transform transition-all duration-700 ease-out opacity-0 translate-y-6 bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 rounded-xl overflow-hidden hover:border-primary transition-all duration-300 flex flex-col">
           <div className="h-48 bg-slate-100 dark:bg-slate-900 flex items-center justify-center p-8 relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent" />
             <img
@@ -179,7 +199,7 @@ export default function Certifications() {
         </article>
 
         {/* Card 5 */}
-        <article className="group bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 rounded-xl overflow-hidden hover:border-primary transition-all duration-300 flex flex-col">
+        <article className="project-reveal group transform transition-all duration-700 ease-out opacity-0 translate-y-6 bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/50 rounded-xl overflow-hidden hover:border-primary transition-all duration-300 flex flex-col">
           <div className="h-48 bg-slate-100 dark:bg-slate-900 flex items-center justify-center p-8 relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent" />
             <img
@@ -216,6 +236,11 @@ export default function Certifications() {
           </div>
         </article>
       </div>
+
+      {/* reveal on load using IntersectionObserver (client) */}
+      <script
+        suppressHydrationWarning
+      >{`/* placeholder for hydration */`}</script>
 
       <section className="mt-20 p-6 md:p-8 rounded-2xl bg-primary/5 border border-primary/20 flex flex-col md:flex-row items-center gap-6">
         <div className="flex flex-col md:flex-row items-center md:items-start gap-4 md:gap-8 w-full">

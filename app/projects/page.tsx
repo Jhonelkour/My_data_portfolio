@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useRef, useEffect } from "react";
 
 type Project = {
   id: string;
@@ -65,6 +65,75 @@ export default function Projects() {
     SQL: [],
     Tableau: [],
   };
+
+  const carouselRef = useRef<HTMLDivElement | null>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+
+  useEffect(() => {
+    function update() {
+      const el = carouselRef.current;
+      if (!el) return;
+      setCanScrollLeft(el.scrollLeft > 0);
+      setCanScrollRight(el.scrollWidth > el.clientWidth + el.scrollLeft + 1);
+    }
+    update();
+    const el = carouselRef.current;
+    el?.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    return () => {
+      el?.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, [carouselRef.current]);
+
+  useEffect(() => {
+    const prefersReduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    let userScrolled = false;
+    function onFirstScroll() {
+      userScrolled = true;
+      window.removeEventListener("scroll", onFirstScroll);
+    }
+    window.addEventListener("scroll", onFirstScroll, { passive: true });
+
+    function revealOnScroll(el: Element | null, triggerOnScroll = false) {
+      if (!el) return;
+      if (prefersReduced) {
+        el.classList.remove("opacity-0", "translate-y-6");
+        el.classList.add("opacity-100", "translate-y-0");
+        return;
+      }
+      const io = new IntersectionObserver(
+        (entries, obs) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            if (triggerOnScroll && !userScrolled) return;
+            const node = entry.target as HTMLElement;
+            node.classList.remove("opacity-0", "translate-y-6");
+            node.classList.add("opacity-100", "translate-y-0");
+            obs.unobserve(node);
+          });
+        },
+        { threshold: 0.15 },
+      );
+      io.observe(el);
+    }
+
+    const items = Array.from(document.querySelectorAll(".project-reveal"));
+    items.forEach((it) => revealOnScroll(it, false));
+  }, []);
+
+  function scrollByPage(direction: "left" | "right") {
+    const el = carouselRef.current;
+    if (!el) return;
+    const amount = el.clientWidth * 0.9; // scroll nearly one page
+    el.scrollBy({
+      left: direction === "left" ? -amount : amount,
+      behavior: "smooth",
+    });
+  }
 
   const categories = useMemo(() => {
     const set = new Set<string>();
@@ -236,7 +305,7 @@ export default function Projects() {
                 <div
                   key={p.id}
                   data-category={p.categories.join(", ")}
-                  className="group relative md:col-span-2 bg-primary/5 dark:bg-white/5 border border-primary/20 rounded-xl overflow-hidden hover:border-primary/50 transition-all flex flex-col md:flex-row"
+                  className="project-reveal group relative md:col-span-2 bg-primary/5 dark:bg-white/5 border border-primary/20 rounded-xl overflow-hidden hover:border-primary/50 transform transition-all duration-700 ease-out opacity-0 translate-y-6 flex flex-col md:flex-row"
                 >
                   <div className="md:w-1/2 overflow-hidden h-64 md:h-auto">
                     <img
@@ -299,7 +368,7 @@ export default function Projects() {
               <div
                 key={p.id}
                 data-category={p.categories.join(", ")}
-                className="bg-primary/5 dark:bg-white/5 border border-primary/20 rounded-xl overflow-hidden hover:border-primary/50 transition-all flex flex-col"
+                className="project-reveal bg-primary/5 dark:bg-white/5 border border-primary/20 rounded-xl overflow-hidden hover:border-primary/50 transform transition-all duration-700 ease-out opacity-0 translate-y-6 flex flex-col"
               >
                 <div className="h-48 overflow-hidden bg-background-dark/50 relative">
                   <img
