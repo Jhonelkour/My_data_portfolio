@@ -19,7 +19,7 @@ const ALL_PROJECTS: Project[] = [
     description:
       "Automated data collection pipeline and ensemble models for used car price prediction.",
     img: "/images/Price-Prediction-in-Online-Car-Marketplaces.png",
-    categories: ["Machine Learning"],
+    categories: ["Machine Learning", "Data Visualization"],
     demo: "https://avito-used-car-price-predictor.streamlit.app/",
     repo: "https://github.com/Jhonelkour/avito-used-car-price-predictor",
   },
@@ -29,7 +29,7 @@ const ALL_PROJECTS: Project[] = [
     description:
       "Machine learning model for loan default prediction with calibration to optimize profitability.",
     img: "/images/use-case-credit-risk_2-cover.jpg",
-    categories: ["Machine Learning"],
+    categories: ["Machine Learning", "Data Visualization"],
     repo: "https://github.com/Jhonelkour/bank-credit-scoring-model",
   },
   {
@@ -125,6 +125,8 @@ export default function Projects() {
     items.forEach((it) => revealOnScroll(it, false));
   }, []);
 
+  // (moved) Ensure filtered results are visible immediately (remove initial hidden classes)
+
   function scrollByPage(direction: "left" | "right") {
     const el = carouselRef.current;
     if (!el) return;
@@ -162,13 +164,27 @@ export default function Projects() {
     return list;
   }, [appliedChecked, query, techFilters]);
 
+  // Ensure filtered results are visible immediately (remove initial hidden classes)
+  useEffect(() => {
+    const items = Array.from(document.querySelectorAll(".project-reveal"));
+    items.forEach((el) => {
+      el.classList.remove("opacity-0", "translate-y-6");
+      el.classList.add("opacity-100", "translate-y-0");
+    });
+  }, [filtered]);
+
   function toggleCategory(cat: string) {
-    setChecked((prev) =>
-      prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat],
-    );
+    setChecked((prev) => {
+      const next = prev.includes(cat)
+        ? prev.filter((c) => c !== cat)
+        : [...prev, cat];
+      setAppliedChecked(next);
+      return next;
+    });
   }
 
   function applyFilters() {
+    // keep for backward compatibility with the Confirm button
     setAppliedChecked(checked.slice());
   }
 
@@ -221,13 +237,23 @@ export default function Projects() {
                   </span>
                 </label>
               ))}
-              <div className="mt-4">
+              <div className="mt-4 flex gap-3">
+                <button
+                  id="clearCategoriesBtn"
+                  onClick={() => {
+                    setChecked([]);
+                    setAppliedChecked([]);
+                  }}
+                  className="px-4 py-2 bg-white border border-primary/20 text-primary rounded-lg text-sm font-semibold hover:bg-primary/10 transition"
+                >
+                  Clear Filters
+                </button>
                 <button
                   id="applyCategoriesBtn"
                   onClick={applyFilters}
                   className="px-4 py-2 bg-primary text-white rounded-lg text-sm font-semibold"
                 >
-                  Confirm
+                  Apply
                 </button>
               </div>
             </div>
